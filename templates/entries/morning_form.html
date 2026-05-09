@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+
+{% block title %}🌅 Утренний ритуал{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow" style="background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);">
+            <div class="card-header text-center" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+                <h2 class="mb-0">🌅 {{ title }}</h2>
+                <p class="mb-0 mt-2">3 минуты на настройку на успешный день</p>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-info">
+                    <strong>🎯 Почему это важно?</strong>
+                    <p>Утренний ритуал помогает настроиться на позитивный лад, сфокусироваться на целях и начать день с благодарности.</p>
+                </div>
+
+                <form method="post">
+                    {% csrf_token %}
+
+                    <div class="mb-4">
+                        <label for="{{ form.morning_gratitude.id_for_label }}" class="form-label h5">
+                            🙏 За что я благодарен?
+                        </label>
+                        {{ form.morning_gratitude }}
+                        <small class="form-text text-muted">Напишите 3-5 вещей, за которые вы благодарны</small>
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="{{ form.morning_affirmation.id_for_label }}" class="form-label h5">
+                            💫 Моя аффирмация на сегодня
+                        </label>
+                        {{ form.morning_affirmation }}
+                        <small class="form-text text-muted">Позитивное утверждение "Я ..."</small>
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="{{ form.morning_goals.id_for_label }}" class="form-label h5">
+                            🎯 Что сделает сегодняшний день великим?
+                        </label>
+                        {{ form.morning_goals }}
+                        <small class="form-text text-muted">2-3 ключевые задачи</small>
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            ✨ Завершить утренний ритуал
+                        </button>
+                        <a href="{% url 'entries:list' %}" class="btn btn-secondary">
+                            ⏩ Пропустить (не рекомендуется)
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    textarea, input {
+        font-size: 1.1rem !important;
+    }
+    textarea:focus, input:focus {
+        box-shadow: 0 0 0 0.25rem rgba(102, 126, 234, 0.25) !important;
+        border-color: #667eea !important;
+    }
+</style>
+{% endblock %}

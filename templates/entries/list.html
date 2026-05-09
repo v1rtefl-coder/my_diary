@@ -1,0 +1,149 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Мой дневник успеха{% endblock %}
+
+{% block content %}
+<!-- Приветственная секция -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card bg-gradient-primary text-white" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+            <div class="card-body text-center">
+                <h1 class="display-5 mb-3">🌟 {{ user.username }}, добро пожаловать!</h1>
+                <p class="lead">6 минут в день, которые изменят вашу жизнь</p>
+                <div class="row mt-4">
+                    <div class="col-md-6">
+                        <div class="border rounded p-3">
+                            <h3>🌅 Утро</h3>
+                            <p>3 минуты на благодарность, аффирмации и цели</p>
+                            {% if today_entry and today_entry.morning_gratitude %}
+                                <span class="badge bg-success">✅ Утро завершено</span>
+                            {% else %}
+                                <a href="{% url 'entries:morning' %}" class="btn btn-light">Начать утро 🌅</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="border rounded p-3">
+                            <h3>🌙 Вечер</h3>
+                            <p>3 минуты на победы, уроки и рефлексию</p>
+                            {% if today_entry and today_entry.evening_wins %}
+                                <span class="badge bg-success">✅ Вечер завершён</span>
+                            {% elif today_entry and today_entry.morning_gratitude %}
+                                <a href="{% url 'entries:evening' today_entry.pk %}" class="btn btn-light">Завершить день 🌙</a>
+                            {% else %}
+                                <span class="badge bg-secondary">Сначала заполните утро</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Статистика -->
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <h3 class="text-primary">{{ total_entries }}</h3>
+                <p class="text-muted">Дней в дневнике</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <h3 class="text-success">{{ completed_morning }}</h3>
+                <p class="text-muted">Утренних записей</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <h3 class="text-warning">{{ completed_evening }}</h3>
+                <p class="text-muted">Вечерних записей</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <a href="{% url 'entries:statistics' %}" class="btn btn-outline-primary w-100">
+                    📊 Подробная статистика
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Поиск -->
+<div class="card mb-4">
+    <div class="card-body">
+        <form method="get" class="row g-3">
+            <div class="col-md-10">
+                {{ form.query }}
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-primary w-100">
+                    🔍 Искать
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Список записей -->
+{% if entries %}
+    <h3 class="mb-3">📅 История успеха</h3>
+    <div class="timeline">
+        {% for entry in entries %}
+            <div class="card mb-3">
+                <div class="card-header bg-light">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">{{ entry.date|date:"l, d F Y" }}</h5>
+                        <div>
+                            {% if entry.get_morning_completed %}
+                                <span class="badge bg-success me-1">🌅 Утро ✓</span>
+                            {% endif %}
+                            {% if entry.get_evening_completed %}
+                                <span class="badge bg-info">🌙 Вечер ✓</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6>🙏 Благодарности:</h6>
+                            <p class="small">{{ entry.morning_gratitude|truncatewords:20 }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <h6>🏆 Победы:</h6>
+                            <p class="small">{{ entry.evening_wins|truncatewords:20|default:"Не заполнено" }}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer bg-transparent">
+                    <a href="{% url 'entries:detail' entry.pk %}" class="btn btn-sm btn-primary">
+                        📖 Подробнее
+                    </a>
+                    <a href="{% url 'entries:delete' entry.pk %}" class="btn btn-sm btn-danger float-end">
+                        🗑️ Удалить
+                    </a>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <div class="alert alert-info text-center">
+        <h4>✨ Добро пожаловать в 6-минутный дневник успеха!</h4>
+        <p>Начните свой путь к лучшей версии себя уже сегодня.</p>
+        <a href="{% url 'entries:morning' %}" class="btn btn-primary btn-lg mt-3">
+            🌅 Начать утро
+        </a>
+    </div>
+{% endif %}
+{% endblock %}

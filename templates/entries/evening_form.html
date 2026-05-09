@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% block title %}🌙 Вечерний ритуал{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow" style="background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);">
+            <div class="card-header text-center" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white;">
+                <h2 class="mb-0">🌙 {{ title }}</h2>
+                <p class="mb-0 mt-2">3 минуты на подведение итогов дня</p>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-success">
+                    <strong>🌟 Отличная работа!</strong>
+                    <p>Вы уже сделали первый шаг к успеху сегодня. Давайте закрепим результат!</p>
+                </div>
+
+                <form method="post">
+                    {% csrf_token %}
+
+                    <div class="mb-4">
+                        <label for="{{ form.evening_wins.id_for_label }}" class="form-label h5">
+                            🏆 Мои сегодняшние победы
+                        </label>
+                        {{ form.evening_wins }}
+                        <small class="form-text text-muted">Что у вас получилось? Чем вы гордитесь?</small>
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="{{ form.evening_improvement.id_for_label }}" class="form-label h5">
+                            📈 Что я мог сделать лучше?
+                        </label>
+                        {{ form.evening_improvement }}
+                        <small class="form-text text-muted">Уроки и возможности для роста</small>
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="{{ form.evening_lesson.id_for_label }}" class="form-label h5">
+                            💡 Чему я научился сегодня?
+                        </label>
+                        {{ form.evening_lesson }}
+                        <small class="form-text text-muted">Новые инсайты, открытия, выводы</small>
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="{{ form.mood.id_for_label }}" class="form-label h5">
+                            😊 Моё настроение сегодня
+                        </label>
+                        {{ form.mood }}
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-success btn-lg">
+                            🎉 Завершить день с победой!
+                        </button>
+                        <a href="{% url 'entries:list' %}" class="btn btn-secondary">
+                            🏠 Вернуться на главную
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

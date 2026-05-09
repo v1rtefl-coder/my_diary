@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+
+{% block title %}Запись от {{ entry.date }}{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8 mx-auto">
+        <div class="card shadow">
+            <div class="card-header" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+                <h3 class="mb-0 text-center">{{ entry.date|date:"l, d F Y" }}</h3>
+            </div>
+            <div class="card-body">
+                <!-- Утренняя секция -->
+                <div class="mb-5">
+                    <h4 class="text-primary">🌅 Утро</h4>
+                    <hr>
+
+                    <div class="mb-4">
+                        <h5>🙏 Благодарности:</h5>
+                        <div class="p-3 bg-light rounded">
+                            {{ entry.morning_gratitude|linebreaks }}
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <h5>💫 Аффирмация:</h5>
+                        <div class="p-3 bg-light rounded">
+                            <i class="bi bi-quote"></i> {{ entry.morning_affirmation }}
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <h5>🎯 Цели на день:</h5>
+                        <div class="p-3 bg-light rounded">
+                            {{ entry.morning_goals|linebreaks }}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Вечерняя секция -->
+                <div class="mb-4">
+                    <h4 class="text-success">🌙 Вечер</h4>
+                    <hr>
+
+                    {% if entry.evening_wins %}
+                        <div class="mb-4">
+                            <h5>🏆 Победы:</h5>
+                            <div class="p-3 bg-light rounded">
+                                {{ entry.evening_wins|linebreaks }}
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <h5>📈 Что можно улучшить:</h5>
+                            <div class="p-3 bg-light rounded">
+                                {{ entry.evening_improvement|linebreaks }}
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <h5>💡 Уроки дня:</h5>
+                            <div class="p-3 bg-light rounded">
+                                {{ entry.evening_lesson|linebreaks }}
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <h5>😊 Настроение:</h5>
+                            <div class="p-3 bg-light rounded">
+                                {{ entry.get_mood_display }}
+                            </div>
+                        </div>
+                    {% else %}
+                        <div class="alert alert-warning">
+                            🌙 Вечерняя часть ещё не заполнена
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="card-footer text-center">
+                <a href="{% url 'entries:list' %}" class="btn btn-secondary">
+                    ← Назад к списку
+                </a>
+                {% if not entry.evening_wins %}
+                    <a href="{% url 'entries:evening' entry.pk %}" class="btn btn-success">
+                        🌙 Заполнить вечернюю часть
+                    </a>
+                {% endif %}
+                <a href="{% url 'entries:delete' entry.pk %}" class="btn btn-danger">
+                    🗑️ Удалить запись
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

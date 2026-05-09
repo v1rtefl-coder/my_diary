@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+
+{% block title %}Моя статистика успеха{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <h2 class="text-center mb-4">📊 Ваша статистика успеха</h2>
+    </div>
+
+    <div class="col-md-4 mb-3">
+        <div class="card text-center bg-primary text-white">
+            <div class="card-body">
+                <h1 class="display-4">{{ total_days }}</h1>
+                <p>Дней в дневнике</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4 mb-3">
+        <div class="card text-center bg-success text-white">
+            <div class="card-body">
+                <h1 class="display-4">{{ streak }}</h1>
+                <p>Дней подряд 🔥</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4 mb-3">
+        <div class="card text-center bg-warning text-white">
+            <div class="card-body">
+                <h1 class="display-4">{{ total_wins }}</h1>
+                <p>Всего побед 🏆</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12 mt-4">
+        <div class="card">
+            <div class="card-header">
+                <h4>😊 Статистика настроения</h4>
+            </div>
+            <div class="card-body">
+                <canvas id="moodChart"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const ctx = document.getElementById('moodChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: [{% for mood, count in mood_stats.items %}'{{ mood }}',{% endfor %}],
+            datasets: [{
+                label: 'Количество дней',
+                data: [{% for mood, count in mood_stats.items %}{{ count }},{% endfor %}],
+                backgroundColor: 'rgba(102, 126, 234, 0.5)',
+                borderColor: 'rgba(102, 126, 234, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: { stepSize: 1 }
+                }
+            }
+        }
+    });
+</script>
+{% endblock %}
